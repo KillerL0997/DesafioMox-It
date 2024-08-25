@@ -13,10 +13,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Instalacion de la version de python 
       - name: Preparando version de Python
+      # Version de la "accion" que instalara Python 
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+          # De la siguiente forma se instala "la mayor menor version". En este caso, la version 3.0
+          # python-version: '3.x'
+          # Arquitectura 'x64' o 'x86' (por defecto, este valor esta en 'x64')
+          # arquitecture: 'x64'
 
       - name: Crear e iniciar el entorno virtual
         run: |
@@ -24,7 +30,9 @@ jobs:
           source venv/bin/activate
       
       - name: Instalar dependencias
+        # Instala las dependencias especificadas en requirements.txt
         # run: pip install -r requirements.txt
+        # Tambien se puede instalar o actualizar las dependencias de esta forma
         run: python -m pip install --upgrade pip
         
       - name: Utilizando Ruff
@@ -36,13 +44,15 @@ jobs:
         run: pip install tox
         
       - name: Ejecutar tox
-        # Run tox using the version of Python in `PATH`
         run: tox -e py
         
       - name: Pruebas con pytest
         run: |
           pip install pytest pytest-cov
-          # pytest tests.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
+          # Ejecucion del archivo tests.py
+          # pytest tests.py --doctest-modules 
+          --junitxml=junit/test-results.xml 
+          --cov=com --cov-report=xml --cov-report=html
 
       - name: Comprimir artefactos para el despliegue
         run: zip release.zip ./* -r
@@ -70,7 +80,7 @@ jobs:
         with:
           name: python-app
 
-      - name: Descomprimir artefactos para el desplege
+      - name: Descomprimir artefactos para el despliegue
         run: unzip release.zip
       
       - name: Loguear en Azure
@@ -84,6 +94,8 @@ jobs:
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
         with:
+          # Nombre de la aplicación
           app-name: 'DesafioMox-It'
+          # Nombre del slot
           slot-name: 'Production'
           
