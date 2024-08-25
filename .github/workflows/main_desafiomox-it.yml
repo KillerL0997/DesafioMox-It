@@ -50,9 +50,7 @@ jobs:
         run: |
           pip install pytest pytest-cov
           # Ejecucion del archivo tests.py
-          # pytest tests.py --doctest-modules 
-          --junitxml=junit/test-results.xml 
-          --cov=com --cov-report=xml --cov-report=html
+          # pytest tests.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
 
       - name: Comprimir artefactos para el despliegue
         run: zip release.zip ./* -r
